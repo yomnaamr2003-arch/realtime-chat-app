@@ -153,14 +153,26 @@ This repo is set up for a free-tier deploy on Render.com via `render.yaml`
 See `render.yaml` for the exact service config, and `ROLLBACK.md` for the
 rollback procedure and evidence log.
 
-**To deploy on Render (free):**
+**To deploy on Render (free, no credit card required):**
 1. Push this repo to a public GitHub repository.
-2. In Render, choose "New +" → "Blueprint" and point it at the repo —
-   `render.yaml` is picked up automatically.
-3. Render generates `JWT_SECRET` for you and provisions a 1GB persistent
-   disk for the SQLite file.
-4. After the first deploy, tag the commit (`git tag v1.0.0 && git push
+2. Sign in to Render (Google/GitHub/GitLab SSO — pick whichever method your
+   account was originally created with, or sign up fresh with email).
+3. Choose "New +" → "Blueprint" and point it at the repo — `render.yaml` is
+   picked up automatically, on the free plan, with no disk attached (disks
+   are a paid-plan feature and are what triggers Render's card prompt).
+4. Render generates `JWT_SECRET` for you automatically.
+5. After the first deploy, tag the commit (`git tag v1.0.0 && git push
    --tags`) so `scripts/rollback.sh` has something to roll back to.
+
+**Trade-off of skipping the paid disk:** the SQLite file lives on the free
+instance's local disk. It survives normal restarts, but is wiped on every
+new deploy and whenever Render spins the free instance down for
+inactivity. That's fine for a class/demo project — just re-run `npm run
+seed` (or register fresh accounts) after a redeploy. If you need data to
+survive deploys, point `DB_PATH` at a free managed Postgres instead (Render,
+Supabase, and Neon all offer one) and swap `better-sqlite3` for a Postgres
+client — everything else in the app (routes, sockets, services) stays the
+same since the model layer is the only place that talks to the DB.
 
 ## Testing it locally with two users
 

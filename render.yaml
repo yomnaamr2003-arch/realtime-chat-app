@@ -22,8 +22,12 @@ services:
       - key: JWT_EXPIRES_IN
         value: 7d
       - key: DB_PATH
-        value: /opt/render/project/src/data/chat.db
-    disk:
-      name: chat-data
-      mountPath: /opt/render/project/src/data
-      sizeGB: 1
+        value: ./data/chat.db
+    # No `disk:` block on purpose: persistent disks are a paid-plan feature on
+    # Render and trigger a credit-card requirement even on an otherwise-free
+    # service. Without one, the SQLite file lives on the instance's local
+    # (ephemeral) filesystem: it persists across requests and restarts, but
+    # is wiped on every new deploy and on Render's periodic free-instance
+    # spin-downs. Fine for a demo/learning project. If you need data to
+    # survive redeploys, swap in a free managed Postgres (e.g. Render's free
+    # Postgres, Supabase, or Neon) instead of SQLite.
