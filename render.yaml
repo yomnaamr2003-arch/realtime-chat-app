@@ -1,0 +1,29 @@
+# Deployment config for Render.com (free tier).
+# Import this repo at https://dashboard.render.com/select-repo?type=blueprint
+# Render reads this file automatically and provisions the service below.
+services:
+  - type: web
+    name: realtime-chat-app
+    env: node
+    plan: free
+    region: oregon
+    branch: main
+    buildCommand: npm install
+    startCommand: node server.js
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: DB_PATH
+        value: /opt/render/project/src/data/chat.db
+    disk:
+      name: chat-data
+      mountPath: /opt/render/project/src/data
+      sizeGB: 1

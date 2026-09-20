@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  chat-app:
+    build: .
+    image: realtime-chat-app:latest
+    container_name: realtime-chat-app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - JWT_SECRET=${JWT_SECRET:?set JWT_SECRET in a .env file}
+      - JWT_EXPIRES_IN=7d
+      - DB_PATH=/usr/src/app/data/chat.db
+    volumes:
+      - chat-data:/usr/src/app/data
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/api/health', r => process.exit(r.statusCode===200?0:1)).on('error', () => process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  chat-data:

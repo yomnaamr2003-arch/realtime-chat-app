@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Wire — Real-Time Chat</title>
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+
+<!-- ===================== AUTH VIEW ===================== -->
+<main id="auth-view" class="auth-view">
+  <div class="auth-card">
+    <div class="brand">
+      <span class="brand-mark">〜</span>
+      <span class="brand-name">Wire</span>
+    </div>
+
+    <div class="auth-tabs" role="tablist">
+      <button class="auth-tab is-active" data-tab="login" role="tab">Log in</button>
+      <button class="auth-tab" data-tab="register" role="tab">Create account</button>
+    </div>
+
+    <form id="login-form" class="auth-form">
+      <label>
+        <span>Email</span>
+        <input type="email" name="email" autocomplete="email" required />
+      </label>
+      <label>
+        <span>Password</span>
+        <input type="password" name="password" autocomplete="current-password" required />
+      </label>
+      <p class="form-error" data-error-for="login"></p>
+      <button type="submit" class="btn-primary">Log in</button>
+    </form>
+
+    <form id="register-form" class="auth-form is-hidden">
+      <label>
+        <span>Username</span>
+        <input type="text" name="username" autocomplete="username" minlength="3" maxlength="24" required />
+      </label>
+      <label>
+        <span>Email</span>
+        <input type="email" name="email" autocomplete="email" required />
+      </label>
+      <label>
+        <span>Password</span>
+        <input type="password" name="password" autocomplete="new-password" minlength="8" required />
+        <span class="hint">At least 8 characters.</span>
+      </label>
+      <p class="form-error" data-error-for="register"></p>
+      <button type="submit" class="btn-primary">Create account</button>
+    </form>
+  </div>
+</main>
+
+<!-- ===================== APP VIEW ===================== -->
+<div id="app-view" class="app-view is-hidden">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="me">
+        <span class="avatar" id="me-avatar"></span>
+        <div class="me-info">
+          <span class="me-name" id="me-username"></span>
+          <span class="me-status"><i class="dot dot-online"></i> Online</span>
+        </div>
+      </div>
+      <button id="logout-btn" class="icon-btn" title="Log out" aria-label="Log out">⏻</button>
+    </div>
+
+    <div class="search-box">
+      <input type="text" id="user-search" placeholder="Find people by username or email" autocomplete="off" />
+      <div id="search-results" class="search-results is-hidden"></div>
+    </div>
+
+    <div class="conversations-label">Conversations</div>
+    <ul id="conversation-list" class="conversation-list"></ul>
+  </aside>
+
+  <section class="chat-pane">
+    <div id="empty-state" class="empty-state">
+      <p>Select a conversation, or search for someone to start one.</p>
+    </div>
+
+    <div id="thread" class="thread is-hidden">
+      <header class="thread-header">
+        <div>
+          <h1 id="thread-title">—</h1>
+          <p id="thread-subtitle" class="thread-subtitle">—</p>
+        </div>
+      </header>
+
+      <div id="message-list" class="message-list"></div>
+
+      <div id="typing-indicator" class="typing-indicator is-hidden"></div>
+
+      <form id="message-form" class="message-form">
+        <textarea id="message-input" placeholder="Write a message…" rows="1" maxlength="4000"></textarea>
+        <button type="submit" class="btn-send" aria-label="Send message">Send</button>
+      </form>
+    </div>
+  </section>
+
+  <aside class="notif-pane">
+    <div class="notif-header">
+      <span>Notifications</span>
+      <button id="mark-all-read" class="text-btn">Mark all read</button>
+    </div>
+    <ul id="notification-list" class="notification-list"></ul>
+  </aside>
+</div>
+
+<div id="toast" class="toast is-hidden"></div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/app.js"></script>
+</body>
+</html>
